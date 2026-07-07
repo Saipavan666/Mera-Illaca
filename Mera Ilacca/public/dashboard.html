@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      color: #1f2937;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      max-width: 480px;
+      width: 90%;
+    }
+    .logo { font-size: 3rem; margin-bottom: 16px; }
+    h1   { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+    p    { color: #6b7280; margin-bottom: 24px; line-height: 1.6; }
+    .user-info {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      text-align: left;
+      font-size: 0.88rem;
+      color: #92400e;
+    }
+    .user-info strong { color: #c2410c; }
+    .btn {
+      padding: 11px 28px;
+      background: #f97316;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #ea580c; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">🏘️</div>
+    <h1>Welcome to Mera Ilaka!</h1>
+    <p>You've successfully logged in. This is your neighborhood dashboard — more features are coming soon!</p>
+
+    <div class="user-info" id="user-info">
+      <strong>Loading user info...</strong>
+    </div>
+
+    <button class="btn" onclick="logout()">Sign Out</button>
+  </div>
+
+  <script>
+    // Display user info from session
+    const raw = localStorage.getItem('mi_user') || sessionStorage.getItem('mi_user');
+    const infoEl = document.getElementById('user-info');
+    if (raw) {
+      try {
+        const user = JSON.parse(raw);
+        infoEl.innerHTML = `
+          <strong>👤 ${user.fullName}</strong><br>
+          📧 ${user.email}<br>
+          🏷️ Role: ${user.role || 'resident'}<br>
+          ${user.neighborhood ? '📍 ' + user.neighborhood : ''}
+        `;
+      } catch {
+        infoEl.textContent = 'Welcome back!';
+      }
+    } else {
+      infoEl.textContent = 'No session found.';
+    }
+
+    function logout() {
+      localStorage.removeItem('mi_token');
+      localStorage.removeItem('mi_user');
+      sessionStorage.removeItem('mi_token');
+      sessionStorage.removeItem('mi_user');
+      window.location.href = '/login.html';
+    }
+  </script>
+</body>
+</html>

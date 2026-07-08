@@ -685,25 +685,45 @@ body {
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Mobile hamburger */
+/* ── Mobile hamburger button ──
+   Always rendered in the DOM; hidden on wide screens via the media query below.
+   On narrow screens (≤768px) it becomes the primary sidebar trigger.           */
 .mobile-menu-btn {
-  display: none;
+  display: none;          /* hidden by default; shown inside @media ≤768px */
   background: none;
   border: none;
   cursor: pointer;
   color: var(--gray-700);
   padding: 6px;
   border-radius: 6px;
+  align-items: center;
+  justify-content: center;
 }
-.mobile-menu-btn svg { width: 22px; height: 22px; }
+.mobile-menu-btn:hover { background: var(--gray-100); }
+.mobile-menu-btn svg   { width: 22px; height: 22px; }
 
-/* Sidebar overlay for mobile */
+/* ── Sidebar backdrop overlay ──
+   Hidden by default. Activated by JS adding class="active".
+   Must live OUTSIDE any media query so the .active rule fires at all widths. */
 .sidebar-overlay {
-  display: none;
+  display: none;           /* hidden until .active is applied */
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  cursor: pointer;
+}
+
+/* Show the overlay whenever .active is set (JS does this on mobile open) */
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* ── Sidebar open state (mobile) ──
+   Must live OUTSIDE the media query so adding .mobile-open always works,
+   even if the screen is briefly wider than 768 px (e.g. landscape phones). */
+.sidebar.mobile-open {
+  transform: translateX(0) !important;
 }
 
 /* ════════════════════════════════════════
@@ -714,23 +734,21 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* Push sidebar off-screen; JS will add .mobile-open to bring it back */
   .sidebar {
     transform: translateX(-100%);
     width: var(--sidebar-width) !important;
   }
 
-  .sidebar.mobile-open {
-    transform: translateX(0);
-  }
-
-  .sidebar-overlay.active { display: block; }
+  /* .sidebar.mobile-open and .sidebar-overlay.active are defined ABOVE
+     (outside this block) so they work at all viewport widths */
 
   .main-content,
   .main-content.expanded {
-    margin-left: 0;
+    margin-left: 0;   /* no sidebar offset on mobile */
   }
 
-  .mobile-menu-btn { display: flex; }
+  .mobile-menu-btn { display: flex; }  /* show the hamburger */
 
   .page-body { padding: 16px; }
 

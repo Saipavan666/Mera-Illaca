@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka — Notifications</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    .notif-toolbar { display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+    .notif-tabs { display:flex; gap:0; background:var(--gray-100); border-radius:var(--radius-sm); padding:3px; }
+    .notif-tab { padding:8px 16px; border:none; background:transparent; border-radius:6px; font-family:var(--font); font-size:0.85rem; font-weight:600; color:var(--gray-500); cursor:pointer; transition:all var(--transition); }
+    .notif-tab.active { background:white; color:var(--primary); box-shadow:var(--shadow-sm); }
+
+    .notif-group-label { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gray-400); padding:12px 0 6px; }
+
+    .notif-row { display:flex; gap:14px; align-items:flex-start; padding:16px 20px; border-bottom:1px solid var(--gray-100); transition:background var(--transition); cursor:pointer; }
+    .notif-row:hover { background:var(--gray-50); }
+    .notif-row.unread { background:#fff9f5; }
+    .notif-row:last-child { border-bottom:none; }
+
+    .notif-icon-wrap { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+    .notif-content { flex:1; }
+    .notif-title   { font-size:0.9rem; font-weight:600; color:var(--gray-800); margin-bottom:3px; }
+    .notif-body    { font-size:0.83rem; color:var(--gray-600); line-height:1.4; }
+    .notif-time    { font-size:0.72rem; color:var(--gray-400); margin-top:4px; }
+    .unread-indicator { width:9px; height:9px; border-radius:50%; background:var(--primary); flex-shrink:0; margin-top:6px; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content" id="mainContent">
+    <header class="top-header">
+      <button class="mobile-menu-btn" id="mobileMenuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <h1 class="header-title">Notifications</h1>
+      <div class="header-actions">
+        <button class="btn btn-secondary btn-sm" onclick="markAllRead()">✓ Mark all read</button>
+        <a href="profile.html"><div class="header-avatar" id="headerAvatar">U</div></a>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <div style="max-width:720px;">
+        <div class="notif-toolbar">
+          <div class="notif-tabs">
+            <button class="notif-tab active" onclick="switchNotifTab('all', this)">All</button>
+            <button class="notif-tab" onclick="switchNotifTab('unread', this)">Unread <span id="unreadCount" style="background:var(--primary); color:white; border-radius:10px; padding:1px 6px; font-size:0.72rem; margin-left:4px;"></span></button>
+            <button class="notif-tab" onclick="switchNotifTab('social', this)">Social</button>
+            <button class="notif-tab" onclick="switchNotifTab('system', this)">System</button>
+          </div>
+        </div>
+        <div class="card" id="notifList"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/app.js"></script>
+<script>
+'use strict';
+
+const NOTIF_BG   = { social:'#fff7ed', marketplace:'#eff6ff', event:'#f0fdf4', system:'#f1f5f9', alert:'#fff5f5' };
+const NOTIF_ICON = { social:'👥', marketplace:'🛒', event:'📅', system:'🔔', alert:'⚠️' };
+
+let activeTab = 'all';
+let notifications = [
+  { id:1,  type:'social',      title:'Ahmed Khan liked your post',       body:'Your update about the park lights received a like.',      time:'2 min ago',  read:false },
+  { id:2,  type:'social',      title:'Sara K. commented on your post',   body:'"That\'s great news! Thanks for sharing."',             time:'8 min ago',  read:false },
+  { id:3,  type:'marketplace', title:'New enquiry on your listing',      body:'Someone is interested in your iPhone 14 listing.',       time:'25 min ago', read:false },
+  { id:4,  type:'event',       title:'Event Reminder: Cleanup Drive',    body:'The Community Cleanup Drive is tomorrow at 8am!',        time:'1h ago',     read:true  },
+  { id:5,  type:'social',      title:'Nadia M. followed you',            body:'You have a new follower in your neighborhood.',          time:'2h ago',     read:true  },
+  { id:6,  type:'system',      title:'Profile views this week: 24',      body:'Your profile has been viewed 24 times this week.',       time:'3h ago',     read:true  },
+  { id:7,  type:'marketplace', title:'Price drop alert',                 body:'A saved item "Samsung 43\\" TV" dropped in price.',     time:'5h ago',     read:true  },
+  { id:8,  type:'alert',       title:'Water Supply Maintenance',         body:'Water will be off in Block C on Saturday 8am–2pm.',      time:'6h ago',     read:true  },
+  { id:9,  type:'event',       title:'Sports Day — 3 days left',         body:'Don\'t forget to register for the Neighborhood Sports Day!', time:'1d ago', read:true  },
+  { id:10, type:'system',      title:'Welcome to Mera Ilaka!',           body:'Your account is fully set up. Start exploring!',         time:'7d ago',     read:true  },
+];
+
+function switchNotifTab(tab, btn) {
+  activeTab = tab;
+  document.querySelectorAll('.notif-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotifications();
+}
+
+function markAllRead() {
+  notifications.forEach(n => n.read = true);
+  renderNotifications();
+  showToast('All notifications marked as read.', 'success');
+}
+
+function markRead(id) {
+  const n = notifications.find(n => n.id === id);
+  if (n) n.read = true;
+  renderNotifications();
+}
+
+function deleteNotif(id, event) {
+  event.stopPropagation();
+  notifications = notifications.filter(n => n.id !== id);
+  renderNotifications();
+  showToast('Notification removed.', 'info');
+}
+
+function renderNotifications() {
+  let list = notifications;
+  if (activeTab === 'unread') list = notifications.filter(n => !n.read);
+  if (activeTab === 'social')  list = notifications.filter(n => n.type === 'social');
+  if (activeTab === 'system')  list = notifications.filter(n => ['system','alert'].includes(n.type));
+
+  const unread = notifications.filter(n => !n.read).length;
+  const countEl = document.getElementById('unreadCount');
+  if (countEl) countEl.textContent = unread || '';
+  if (countEl) countEl.style.display = unread ? 'inline' : 'none';
+
+  const container = document.getElementById('notifList');
+  if (!list.length) {
+    container.innerHTML = `<div style="padding:48px; text-align:center; color:var(--gray-400);">
+      <div style="font-size:3rem; margin-bottom:12px;">🔔</div>
+      <div style="font-weight:600; margin-bottom:4px;">No notifications</div>
+      <div class="text-sm text-muted">You're all caught up!</div>
+    </div>`;
+    return;
+  }
+
+  // Group by time
+  const today  = list.filter(n => ['min ago','h ago'].some(s => n.time.includes(s)) || n.time === 'just now');
+  const earlier = list.filter(n => n.time.includes('d ago'));
+
+  let html = '';
+  if (today.length) {
+    html += `<div class="notif-group-label" style="padding:12px 20px 4px;">Today</div>`;
+    html += today.map(notifHTML).join('');
+  }
+  if (earlier.length) {
+    html += `<div class="notif-group-label" style="padding:12px 20px 4px;">Earlier</div>`;
+    html += earlier.map(notifHTML).join('');
+  }
+  container.innerHTML = html;
+}
+
+function notifHTML(n) {
+  return `
+    <div class="notif-row ${n.read ? '' : 'unread'}" onclick="markRead(${n.id})">
+      <div class="notif-icon-wrap" style="background:${NOTIF_BG[n.type]}">${NOTIF_ICON[n.type]}</div>
+      <div class="notif-content">
+        <div class="notif-title">${n.title}</div>
+        <div class="notif-body">${n.body}</div>
+        <div class="notif-time">${n.time}</div>
+      </div>
+      ${!n.read ? '<div class="unread-indicator"></div>' : ''}
+      <button onclick="deleteNotif(${n.id}, event)" style="background:none; border:none; cursor:pointer; color:var(--gray-300); padding:4px; font-size:1rem; transition:color .2s;" title="Remove">✕</button>
+    </div>`;
+}
+
+document.addEventListener('DOMContentLoaded', renderNotifications);
+</script>
+</body>
+</html>

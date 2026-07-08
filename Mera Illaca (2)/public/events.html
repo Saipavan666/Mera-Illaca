@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka — Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    .events-grid { display:grid; grid-template-columns:1fr 300px; gap:20px; }
+    .event-card { background:white; border-radius:var(--radius); border:1px solid var(--gray-200); overflow:hidden; margin-bottom:16px; transition:all var(--transition); }
+    .event-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+    .event-banner { height:120px; display:flex; align-items:center; justify-content:center; font-size:3.5rem; }
+    .event-body   { padding:16px 20px; }
+    .event-title  { font-size:1rem; font-weight:700; color:var(--gray-900); margin-bottom:8px; }
+    .event-detail { display:flex; align-items:center; gap:8px; font-size:0.83rem; color:var(--gray-600); margin-bottom:4px; }
+    .event-footer { padding:12px 20px; border-top:1px solid var(--gray-100); display:flex; align-items:center; justify-content:space-between; }
+
+    .mini-cal { }
+    .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .cal-month  { font-weight:700; color:var(--gray-800); }
+    .cal-nav    { background:none; border:none; cursor:pointer; color:var(--gray-400); padding:4px; transition:color var(--transition); }
+    .cal-nav:hover { color:var(--primary); }
+    .cal-grid   { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center; }
+    .cal-day-hdr { font-size:0.7rem; font-weight:600; color:var(--gray-400); padding:4px 0; }
+    .cal-day    { font-size:0.8rem; padding:6px 2px; border-radius:6px; cursor:pointer; transition:all var(--transition); }
+    .cal-day:hover  { background:var(--primary-light); color:var(--primary); }
+    .cal-day.today  { background:var(--primary); color:white; font-weight:700; }
+    .cal-day.has-event { position:relative; font-weight:600; color:var(--primary); }
+    .cal-day.has-event::after { content:''; position:absolute; bottom:2px; left:50%; transform:translateX(-50%); width:4px; height:4px; background:var(--primary); border-radius:50%; }
+    .cal-day.empty { pointer-events:none; }
+
+    .toolbar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+    .filter-chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+    .chip { padding:6px 14px; border-radius:20px; background:white; border:1.5px solid var(--gray-200); font-size:0.8rem; font-weight:600; cursor:pointer; transition:all var(--transition); }
+    .chip.active { background:var(--primary); border-color:var(--primary); color:white; }
+
+    @media (max-width:768px) { .events-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content" id="mainContent">
+    <header class="top-header">
+      <button class="mobile-menu-btn" id="mobileMenuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <h1 class="header-title">Community Events</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary btn-sm" onclick="openModal('addEventModal')">+ Add Event</button>
+        <a href="profile.html"><div class="header-avatar" id="headerAvatar">U</div></a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="filter-chips">
+        <button class="chip active" onclick="evFilter('all', this)">All</button>
+        <button class="chip" onclick="evFilter('community', this)">🏘️ Community</button>
+        <button class="chip" onclick="evFilter('sports', this)">⚽ Sports</button>
+        <button class="chip" onclick="evFilter('cultural', this)">🎭 Cultural</button>
+        <button class="chip" onclick="evFilter('education', this)">📚 Education</button>
+        <button class="chip" onclick="evFilter('official', this)">🏛️ Official</button>
+      </div>
+      <div class="events-grid">
+        <div id="eventsContainer"></div>
+        <div>
+          <!-- Mini Calendar -->
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-header"><div class="card-title">📅 July 2026</div></div>
+            <div class="card-body">
+              <div class="cal-grid" id="calGrid"></div>
+            </div>
+          </div>
+          <!-- RSVP'd events -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">✅ My RSVPs</div></div>
+            <div class="card-body" id="myRsvps">
+              <p class="text-sm text-muted">You haven't RSVP'd to any events yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal-overlay hidden" id="addEventModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Create New Event</span>
+      <button class="modal-close" onclick="closeModal('addEventModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Event Title *</label><input type="text" class="form-input" id="evTitle" placeholder="e.g. Community Cleanup Drive" /></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-group"><label class="form-label">Date *</label><input type="date" class="form-input" id="evDate" /></div>
+        <div class="form-group"><label class="form-label">Time</label><input type="time" class="form-input" id="evTime" /></div>
+      </div>
+      <div class="form-group"><label class="form-label">Location</label><input type="text" class="form-input" id="evLoc" placeholder="e.g. Central Park" /></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-select" id="evCat">
+          <option value="community">Community</option><option value="sports">Sports</option>
+          <option value="cultural">Cultural</option><option value="education">Education</option><option value="official">Official</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="evDesc" placeholder="Tell people what this event is about..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addEventModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addEvent()">Create Event</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/app.js"></script>
+<script>
+'use strict';
+
+const EV_COLORS = { community:'#fff7ed', sports:'#f0fdf4', cultural:'#faf5ff', education:'#eff6ff', official:'#f1f5f9' };
+const EV_EMOJIS = { community:'🏘️', sports:'⚽', cultural:'🎭', education:'📚', official:'🏛️' };
+const EV_TAGS   = { community:'tag-orange', sports:'tag-green', cultural:'tag-purple', education:'tag-blue', official:'tag-gray' };
+
+let evFilter_active = 'all';
+let rsvpSet = new Set();
+let events = [
+  { id:1, cat:'community', title:'Community Clean-up Drive',    date:'2026-07-12', time:'08:00', loc:'Central Park, Main Gate', desc:'Join neighbors for a community clean-up. Gloves and bags provided.', attendees:45 },
+  { id:2, cat:'sports',    title:'Neighborhood Sports Day',     date:'2026-07-15', time:'10:00', loc:'DHA Sports Club',          desc:'Cricket, football & badminton. All ages welcome. Prizes for winners!', attendees:80 },
+  { id:3, cat:'community', title:'Local Business Expo',         date:'2026-07-19', time:'14:00', loc:'Community Hall, Phase 5',  desc:'Local businesses showcase their products and services.', attendees:120 },
+  { id:4, cat:'cultural',  title:'Eid Milad Celebration',       date:'2026-07-25', time:'18:00', loc:'Main Masjid',              desc:'Community gathering to celebrate. Naat competition and food.', attendees:200 },
+  { id:5, cat:'education', title:'Free Computer Skills Workshop',date:'2026-07-28', time:'10:00', loc:'Academy Hall, Street 12', desc:'Basic computer skills for adults. Free enrollment.', attendees:30 },
+  { id:6, cat:'official',  title:'Town Hall Meeting — July',    date:'2026-07-30', time:'17:00', loc:'Civic Center',             desc:'Monthly town hall with local authority representatives.', attendees:60 },
+];
+
+function evFilter(cat, btn) {
+  evFilter_active = cat;
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEvents();
+}
+
+function toggleRsvp(id) {
+  if (rsvpSet.has(id)) {
+    rsvpSet.delete(id);
+    showToast('RSVP cancelled.', 'info');
+  } else {
+    rsvpSet.add(id);
+    showToast('RSVP confirmed! See you there 🎉', 'success');
+  }
+  renderEvents();
+  renderMyRsvps();
+}
+
+function renderEvents() {
+  const list = evFilter_active === 'all' ? events : events.filter(e => e.cat === evFilter_active);
+  const container = document.getElementById('eventsContainer');
+
+  if (!list.length) { container.innerHTML = `<div class="card" style="padding:40px; text-align:center; color:var(--gray-400);">No events found.</div>`; return; }
+
+  container.innerHTML = list.map(e => {
+    const d = new Date(e.date);
+    const isRsvp = rsvpSet.has(e.id);
+    return `
+      <div class="event-card">
+        <div class="event-banner" style="background:${EV_COLORS[e.cat]}">${EV_EMOJIS[e.cat]}</div>
+        <div class="event-body">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+            <div class="event-title">${e.title}</div>
+            <span class="tag ${EV_TAGS[e.cat]}">${EV_EMOJIS[e.cat]}</span>
+          </div>
+          <div class="event-detail">📅 ${d.toLocaleDateString('en-PK',{weekday:'long',day:'numeric',month:'long'})}</div>
+          <div class="event-detail">🕐 ${e.time}</div>
+          <div class="event-detail">📍 ${e.loc}</div>
+          <div style="font-size:0.85rem; color:var(--gray-600); margin-top:8px; line-height:1.5;">${e.desc}</div>
+        </div>
+        <div class="event-footer">
+          <span class="text-sm text-muted">👥 ${e.attendees + (isRsvp ? 1 : 0)} attending</span>
+          <button class="btn btn-sm ${isRsvp ? 'btn-secondary' : 'btn-primary'}" onclick="toggleRsvp(${e.id})">
+            ${isRsvp ? '✓ RSVP\'d' : 'RSVP Now'}
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderMyRsvps() {
+  const container = document.getElementById('myRsvps');
+  const mine = events.filter(e => rsvpSet.has(e.id));
+  if (!mine.length) { container.innerHTML = `<p class="text-sm text-muted">You haven't RSVP'd to any events yet.</p>`; return; }
+  container.innerHTML = mine.map(e => `
+    <div style="display:flex; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid var(--gray-100);">
+      <span style="font-size:1.2rem;">${EV_EMOJIS[e.cat]}</span>
+      <div><div style="font-size:0.85rem; font-weight:600;">${e.title}</div><div class="text-xs text-muted">${e.date}</div></div>
+    </div>
+  `).join('');
+}
+
+function buildCalendar() {
+  const days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const eventDays = new Set(events.map(e => parseInt(e.date.split('-')[2])));
+  const today = new Date().getDate();
+  const year = 2026, month = 6; // July 2026
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = days.map(d => `<div class="cal-day-hdr">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const classes = ['cal-day', d === today ? 'today' : '', eventDays.has(d) ? 'has-event' : ''].filter(Boolean).join(' ');
+    html += `<div class="${classes}">${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function addEvent() {
+  const title = document.getElementById('evTitle').value.trim();
+  const date  = document.getElementById('evDate').value;
+  const time  = document.getElementById('evTime').value;
+  const loc   = document.getElementById('evLoc').value.trim();
+  const cat   = document.getElementById('evCat').value;
+  const desc  = document.getElementById('evDesc').value.trim();
+  if (!title || !date) { showToast('Title and date are required.','error'); return; }
+  events.unshift({ id:Date.now(), cat, title, date, time:time||'TBD', loc:loc||'TBD', desc:desc||'', attendees:1 });
+  closeModal('addEventModal');
+  renderEvents();
+  buildCalendar();
+  showToast('Event created!','success');
+}
+
+document.addEventListener('DOMContentLoaded', () => { renderEvents(); buildCalendar(); renderMyRsvps(); });
+</script>
+</body>
+</html>

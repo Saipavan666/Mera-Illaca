@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    .settings-grid { display:grid; grid-template-columns:220px 1fr; gap:20px; }
+    .settings-nav  { background:white; border-radius:var(--radius); border:1px solid var(--gray-200); padding:8px; height:fit-content; }
+    .settings-nav-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius-sm); font-size:0.87rem; font-weight:500; color:var(--gray-600); cursor:pointer; transition:all var(--transition); border:none; background:none; width:100%; text-align:left; }
+    .settings-nav-item:hover  { background:var(--gray-100); color:var(--gray-800); }
+    .settings-nav-item.active { background:var(--primary-light); color:var(--primary-dark); font-weight:600; }
+
+    .settings-section { display:none; }
+    .settings-section.active { display:block; }
+
+    .setting-row { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--gray-100); gap:16px; }
+    .setting-row:last-child { border-bottom:none; }
+    .setting-info { flex:1; }
+    .setting-label { font-size:0.9rem; font-weight:600; color:var(--gray-800); }
+    .setting-desc  { font-size:0.8rem; color:var(--gray-500); margin-top:2px; }
+
+    /* Toggle switch */
+    .toggle { position:relative; width:44px; height:24px; flex-shrink:0; }
+    .toggle input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; inset:0; background:var(--gray-300); border-radius:24px; cursor:pointer; transition:.3s; }
+    .toggle-slider::before { content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px; background:white; border-radius:50%; transition:.3s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+    .toggle input:checked + .toggle-slider { background:var(--primary); }
+    .toggle input:checked + .toggle-slider::before { transform:translateX(20px); }
+
+    .danger-zone { border:1.5px solid #fecaca; border-radius:var(--radius); padding:20px; background:#fff5f5; }
+    .danger-zone h4 { color:var(--error); font-size:0.95rem; margin-bottom:12px; }
+
+    @media (max-width:768px) { .settings-grid { grid-template-columns:1fr; } .settings-nav { display:flex; overflow-x:auto; gap:4px; padding:4px; } .settings-nav-item { white-space:nowrap; } }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content" id="mainContent">
+    <header class="top-header">
+      <button class="mobile-menu-btn" id="mobileMenuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <h1 class="header-title">Settings</h1>
+      <div class="header-actions">
+        <a href="profile.html"><div class="header-avatar" id="headerAvatar">U</div></a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="settings-grid">
+        <!-- Left nav -->
+        <nav class="settings-nav" role="navigation">
+          <button class="settings-nav-item active" onclick="showSection('account', this)">👤 Account</button>
+          <button class="settings-nav-item" onclick="showSection('notifications', this)">🔔 Notifications</button>
+          <button class="settings-nav-item" onclick="showSection('privacy', this)">🔒 Privacy</button>
+          <button class="settings-nav-item" onclick="showSection('appearance', this)">🎨 Appearance</button>
+          <button class="settings-nav-item" onclick="showSection('security', this)">🛡️ Security</button>
+          <button class="settings-nav-item" onclick="showSection('language', this)">🌐 Language</button>
+          <button class="settings-nav-item" onclick="showSection('danger', this)" style="color:var(--error);">⚠️ Danger Zone</button>
+        </nav>
+
+        <!-- Right content -->
+        <div>
+
+          <!-- Account Section -->
+          <div class="card settings-section active" id="section-account">
+            <div class="card-header"><div class="card-title">Account Settings</div><div class="card-subtitle">Manage your personal information</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="settingName" /></div>
+              <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" id="settingEmail" /></div>
+              <div class="form-group"><label class="form-label">Phone Number</label><input type="tel" class="form-input" id="settingPhone" placeholder="+92 300 0000000" /></div>
+              <div class="form-group"><label class="form-label">Neighborhood</label><input type="text" class="form-input" id="settingNeighborhood" /></div>
+              <div class="form-group"><label class="form-label">Bio</label><textarea class="form-textarea" id="settingBio" placeholder="Tell your neighbors about yourself..."></textarea></div>
+              <button class="btn btn-primary" onclick="saveAccountSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <!-- Notifications Section -->
+          <div class="card settings-section" id="section-notifications">
+            <div class="card-header"><div class="card-title">Notification Preferences</div></div>
+            <div class="card-body">
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Community Posts</div><div class="setting-desc">Get notified when someone posts in your neighborhood</div></div>
+                <label class="toggle"><input type="checkbox" checked onchange="saveSetting('notif_community', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Marketplace Enquiries</div><div class="setting-desc">Notifications when someone enquires about your listing</div></div>
+                <label class="toggle"><input type="checkbox" checked onchange="saveSetting('notif_market', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Event Reminders</div><div class="setting-desc">Reminders for events you've RSVP'd to</div></div>
+                <label class="toggle"><input type="checkbox" checked onchange="saveSetting('notif_events', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Announcements</div><div class="setting-desc">Official notices from local authorities</div></div>
+                <label class="toggle"><input type="checkbox" checked onchange="saveSetting('notif_announcements', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Social Interactions</div><div class="setting-desc">Likes, comments, and follows on your content</div></div>
+                <label class="toggle"><input type="checkbox" onchange="saveSetting('notif_social', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Email Notifications</div><div class="setting-desc">Receive important updates via email</div></div>
+                <label class="toggle"><input type="checkbox" checked onchange="saveSetting('notif_email', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy Section -->
+          <div class="card settings-section" id="section-privacy">
+            <div class="card-header"><div class="card-title">Privacy Settings</div></div>
+            <div class="card-body">
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Public Profile</div><div class="setting-desc">Allow neighbors to view your profile</div></div>
+                <label class="toggle"><input type="checkbox" checked onchange="saveSetting('privacy_public', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Show Phone Number</div><div class="setting-desc">Display your phone on your public profile</div></div>
+                <label class="toggle"><input type="checkbox" onchange="saveSetting('privacy_phone', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Show Email Address</div><div class="setting-desc">Display email on your public profile</div></div>
+                <label class="toggle"><input type="checkbox" onchange="saveSetting('privacy_email', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Activity Status</div><div class="setting-desc">Let others see when you were last active</div></div>
+                <label class="toggle"><input type="checkbox" checked onchange="saveSetting('privacy_activity', this.checked)" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="form-group" style="margin-top:8px;">
+                <label class="form-label">Profile Visibility</label>
+                <select class="form-select" onchange="saveSetting('privacy_visibility', this.value)">
+                  <option value="public">Everyone in neighborhood</option>
+                  <option value="connections">Connections only</option>
+                  <option value="private">Private (only me)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appearance Section -->
+          <div class="card settings-section" id="section-appearance">
+            <div class="card-header"><div class="card-title">Appearance</div></div>
+            <div class="card-body">
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Dark Mode</div><div class="setting-desc">Switch to dark theme (coming soon)</div></div>
+                <label class="toggle"><input type="checkbox" disabled /><span class="toggle-slider" style="opacity:0.5;"></span></label>
+              </div>
+              <div class="form-group" style="margin-top:8px;">
+                <label class="form-label">Language</label>
+                <select class="form-select" onchange="saveSetting('lang', this.value)">
+                  <option value="en">English</option>
+                  <option value="ur">اردو (Urdu)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Font Size</label>
+                <select class="form-select" onchange="saveSetting('font_size', this.value)">
+                  <option value="sm">Small</option>
+                  <option value="md" selected>Medium (Default)</option>
+                  <option value="lg">Large</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Section -->
+          <div class="card settings-section" id="section-security">
+            <div class="card-header"><div class="card-title">Security</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-input" id="curPass" placeholder="••••••••" /></div>
+              <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="newPass" placeholder="Min. 6 characters" /></div>
+              <div class="form-group"><label class="form-label">Confirm New Password</label><input type="password" class="form-input" id="confPass" placeholder="Repeat new password" /></div>
+              <button class="btn btn-primary" style="margin-bottom:24px;" onclick="changePassword()">Update Password</button>
+              <hr class="divider" />
+              <div class="setting-row">
+                <div class="setting-info"><div class="setting-label">Two-Factor Authentication</div><div class="setting-desc">Add an extra layer of security to your account</div></div>
+                <label class="toggle"><input type="checkbox" onchange="showToast('2FA coming soon!','info')" /><span class="toggle-slider"></span></label>
+              </div>
+              <div style="margin-top:16px;">
+                <div class="setting-label" style="margin-bottom:12px;">Active Sessions</div>
+                <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius-sm); padding:14px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><div style="font-size:0.87rem; font-weight:600;">This Device</div><div class="text-xs text-muted">Windows · Chrome · Active now</div></div>
+                    <span class="tag tag-green">Current</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Language Section -->
+          <div class="card settings-section" id="section-language">
+            <div class="card-header"><div class="card-title">Language & Region</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="form-label">Display Language</label>
+                <select class="form-select"><option>English</option><option>اردو</option></select>
+              </div>
+              <div class="form-group"><label class="form-label">Region</label>
+                <select class="form-select"><option>Pakistan</option><option>India</option><option>UAE</option></select>
+              </div>
+              <div class="form-group"><label class="form-label">Time Zone</label>
+                <select class="form-select"><option>PKT (UTC+5)</option><option>IST (UTC+5:30)</option></select>
+              </div>
+              <button class="btn btn-primary" onclick="showToast('Language settings saved!','success')">Save</button>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="card settings-section" id="section-danger">
+            <div class="card-header"><div class="card-title" style="color:var(--error);">⚠️ Danger Zone</div></div>
+            <div class="card-body">
+              <div class="danger-zone" style="margin-bottom:16px;">
+                <h4>Deactivate Account</h4>
+                <p style="font-size:0.87rem; color:var(--gray-600); margin-bottom:16px;">Temporarily disable your account. Your profile won't be visible but your data will be preserved.</p>
+                <button class="btn btn-secondary" onclick="showToast('Account deactivated. Redirecting...','info')">Deactivate Account</button>
+              </div>
+              <div class="danger-zone">
+                <h4>Delete Account</h4>
+                <p style="font-size:0.87rem; color:var(--gray-600); margin-bottom:16px;">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                <button class="btn btn-danger" onclick="confirmDelete()">Delete Account Permanently</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/app.js"></script>
+<script>
+'use strict';
+
+function showSection(id, btn) {
+  document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.settings-nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById(`section-${id}`)?.classList.add('active');
+  btn.classList.add('active');
+}
+
+function saveSetting(key, val) {
+  localStorage.setItem(`mi_setting_${key}`, val);
+  showToast('Setting saved.', 'success');
+}
+
+function saveAccountSettings() {
+  const user = getUser() || {};
+  user.fullName     = document.getElementById('settingName').value.trim() || user.fullName;
+  user.email        = document.getElementById('settingEmail').value.trim() || user.email;
+  user.phone        = document.getElementById('settingPhone').value.trim();
+  user.neighborhood = document.getElementById('settingNeighborhood').value.trim();
+  localStorage.setItem('mi_user', JSON.stringify(user));
+  sessionStorage.setItem('mi_user', JSON.stringify(user));
+  showToast('Account settings saved!', 'success');
+}
+
+function changePassword() {
+  const cur  = document.getElementById('curPass').value;
+  const next = document.getElementById('newPass').value;
+  const conf = document.getElementById('confPass').value;
+  if (!cur || !next || !conf) { showToast('All password fields are required.','error'); return; }
+  if (next.length < 6)        { showToast('New password must be at least 6 characters.','error'); return; }
+  if (next !== conf)           { showToast('Passwords do not match.','error'); return; }
+  document.getElementById('curPass').value  = '';
+  document.getElementById('newPass').value  = '';
+  document.getElementById('confPass').value = '';
+  showToast('Password updated successfully!','success');
+}
+
+function confirmDelete() {
+  if (confirm('Are you sure? This will permanently delete your account and all data. This cannot be undone.')) {
+    showToast('Account deletion initiated. Logging out...','error');
+    setTimeout(logout, 2500);
+  }
+}
+
+function loadAccountForm() {
+  const user = getUser();
+  if (!user) return;
+  document.getElementById('settingName').value         = user.fullName    || '';
+  document.getElementById('settingEmail').value        = user.email       || '';
+  document.getElementById('settingPhone').value        = user.phone       || '';
+  document.getElementById('settingNeighborhood').value = user.neighborhood|| '';
+}
+
+document.addEventListener('DOMContentLoaded', loadAccountForm);
+</script>
+</body>
+</html>

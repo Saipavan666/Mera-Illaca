@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka — Service Providers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    .svc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+    .svc-card { background:white; border-radius:var(--radius); border:1px solid var(--gray-200); padding:20px; display:flex; flex-direction:column; gap:12px; transition:all var(--transition); }
+    .svc-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+    .svc-header { display:flex; gap:14px; align-items:flex-start; }
+    .svc-avatar { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:700; color:white; flex-shrink:0; }
+    .svc-name  { font-size:1rem; font-weight:700; color:var(--gray-900); }
+    .svc-title { font-size:0.83rem; color:var(--gray-500); }
+    .svc-skills { display:flex; flex-wrap:wrap; gap:6px; }
+    .svc-rate  { font-size:0.87rem; font-weight:700; color:var(--primary); }
+    .svc-stats { display:flex; gap:16px; font-size:0.8rem; color:var(--gray-500); }
+    .avail-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:4px; }
+    .avail-dot.yes { background:var(--success); }
+    .avail-dot.no  { background:var(--error); }
+
+    .toolbar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+    .search-wrap { flex:1; min-width:180px; display:flex; align-items:center; background:white; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); overflow:hidden; }
+    .search-wrap input  { flex:1; padding:10px 14px; border:none; outline:none; font-family:var(--font); font-size:0.9rem; }
+    .search-wrap button { padding:10px 14px; background:var(--primary); border:none; cursor:pointer; color:white; }
+    .cat-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .chip { padding:6px 14px; border-radius:20px; background:white; border:1.5px solid var(--gray-200); font-size:0.8rem; font-weight:600; cursor:pointer; transition:all var(--transition); }
+    .chip.active { background:var(--primary); border-color:var(--primary); color:white; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content" id="mainContent">
+    <header class="top-header">
+      <button class="mobile-menu-btn" id="mobileMenuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <h1 class="header-title">Service Providers</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary btn-sm" onclick="openModal('addSvcModal')">+ List Your Service</button>
+        <a href="profile.html"><div class="header-avatar" id="headerAvatar">U</div></a>
+      </div>
+    </header>
+    <main class="page-body">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input type="text" id="svcSearch" placeholder="Search services..." oninput="renderSvc()" />
+          <button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+        </div>
+        <select class="form-select" id="svcSort" onchange="renderSvc()" style="width:auto; padding:10px 14px;">
+          <option value="rating">Highest Rated</option>
+          <option value="jobs">Most Jobs</option>
+          <option value="rate-asc">Rate: Low to High</option>
+        </select>
+      </div>
+      <div class="cat-chips">
+        <button class="chip active" onclick="svcFilter('all', this)">All</button>
+        <button class="chip" onclick="svcFilter('electrical', this)">⚡ Electrical</button>
+        <button class="chip" onclick="svcFilter('plumbing', this)">🔧 Plumbing</button>
+        <button class="chip" onclick="svcFilter('carpentry', this)">🪚 Carpentry</button>
+        <button class="chip" onclick="svcFilter('painting', this)">🎨 Painting</button>
+        <button class="chip" onclick="svcFilter('cleaning', this)">🧹 Cleaning</button>
+        <button class="chip" onclick="svcFilter('ac', this)">❄️ AC Repair</button>
+        <button class="chip" onclick="svcFilter('it', this)">💻 IT Support</button>
+      </div>
+      <div class="svc-grid" id="svcGrid"></div>
+    </main>
+  </div>
+</div>
+
+<!-- Add Service Modal -->
+<div class="modal-overlay hidden" id="addSvcModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">List Your Service</span>
+      <button class="modal-close" onclick="closeModal('addSvcModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Your Name *</label><input type="text" class="form-input" id="newSvcName" placeholder="Full name" /></div>
+      <div class="form-group"><label class="form-label">Service Type</label>
+        <select class="form-select" id="newSvcCat">
+          <option value="electrical">Electrical</option><option value="plumbing">Plumbing</option>
+          <option value="carpentry">Carpentry</option><option value="painting">Painting</option>
+          <option value="cleaning">Cleaning</option><option value="ac">AC Repair</option>
+          <option value="it">IT Support</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Experience (years)</label><input type="number" class="form-input" id="newSvcExp" placeholder="5" min="0" /></div>
+      <div class="form-group"><label class="form-label">Hourly Rate (PKR)</label><input type="number" class="form-input" id="newSvcRate" placeholder="500" /></div>
+      <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="newSvcPhone" placeholder="+92 300 0000000" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addSvcModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addService()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/app.js"></script>
+<script>
+'use strict';
+
+const SVC_COLORS = { electrical:'#f97316', plumbing:'#3b82f6', carpentry:'#92400e', painting:'#a855f7', cleaning:'#22c55e', ac:'#06b6d4', it:'#6366f1' };
+const SVC_EMOJIS = { electrical:'⚡', plumbing:'🔧', carpentry:'🪚', painting:'🎨', cleaning:'🧹', ac:'❄️', it:'💻' };
+
+let svcCat = 'all';
+let providers = [
+  { id:1, name:'Ali Electricals',    cat:'electrical', exp:8,  jobs:340, rating:4.9, rate:800,  phone:'0300-1111111', available:true,  skills:['Wiring','Inverter','MCB','Generator'] },
+  { id:2, name:'Master Plumber Arif',cat:'plumbing',   exp:12, jobs:520, rating:4.8, rate:600,  phone:'0301-2222222', available:true,  skills:['Leak Fix','New Fitting','Bore Pump'] },
+  { id:3, name:'Khan Carpenter',     cat:'carpentry',  exp:15, jobs:210, rating:4.7, rate:1200, phone:'0302-3333333', available:false, skills:['Furniture','Doors','Cabinets'] },
+  { id:4, name:'Saleem Painter',     cat:'painting',   exp:7,  jobs:180, rating:4.6, rate:900,  phone:'0303-4444444', available:true,  skills:['Interior','Exterior','Polish'] },
+  { id:5, name:'CleanPro Services',  cat:'cleaning',   exp:5,  jobs:450, rating:4.5, rate:500,  phone:'0304-5555555', available:true,  skills:['Deep Clean','Office','After Party'] },
+  { id:6, name:'Cool Air AC Expert', cat:'ac',         exp:10, jobs:290, rating:4.8, rate:700,  phone:'0305-6666666', available:true,  skills:['Service','Gas Fill','Installation'] },
+  { id:7, name:'TechFix IT Support', cat:'it',         exp:6,  jobs:130, rating:4.4, rate:1000, phone:'0306-7777777', available:true,  skills:['Network','PC Repair','CCTV','Server'] },
+  { id:8, name:'City Plumbing Co.',  cat:'plumbing',   exp:9,  jobs:375, rating:4.7, rate:650,  phone:'0307-8888888', available:false, skills:['Water Tank','Drainage','CPVC Pipe'] },
+];
+
+function svcFilter(cat, btn) {
+  svcCat = cat;
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSvc();
+}
+
+function renderSvc() {
+  const q    = (document.getElementById('svcSearch')?.value || '').toLowerCase();
+  const sort = document.getElementById('svcSort')?.value || 'rating';
+
+  let list = providers.filter(p =>
+    (svcCat === 'all' || p.cat === svcCat) &&
+    (!q || p.name.toLowerCase().includes(q) || p.skills.join(' ').toLowerCase().includes(q))
+  );
+
+  if (sort === 'rating')   list.sort((a,b) => b.rating - a.rating);
+  if (sort === 'jobs')     list.sort((a,b) => b.jobs - a.jobs);
+  if (sort === 'rate-asc') list.sort((a,b) => a.rate - b.rate);
+
+  const grid = document.getElementById('svcGrid');
+  if (!list.length) { grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--gray-400);">No providers found.</div>`; return; }
+
+  grid.innerHTML = list.map(p => `
+    <div class="svc-card">
+      <div class="svc-header">
+        <div class="svc-avatar" style="background:${SVC_COLORS[p.cat]}">${SVC_EMOJIS[p.cat]}</div>
+        <div>
+          <div class="svc-name">${p.name}</div>
+          <div class="svc-title">${p.exp} yrs experience · 📞 ${p.phone}</div>
+          <div style="font-size:0.8rem; margin-top:4px;">
+            <span class="avail-dot ${p.available ? 'yes' : 'no'}"></span>
+            <span style="color:${p.available ? 'var(--success)' : 'var(--error)'}; font-weight:600;">${p.available ? 'Available Now' : 'Busy'}</span>
+          </div>
+        </div>
+      </div>
+      <div class="svc-skills">${p.skills.map(s => `<span class="tag tag-gray">${s}</span>`).join('')}</div>
+      <div class="svc-stats">
+        <span>⭐ ${p.rating}</span>
+        <span>✅ ${p.jobs} jobs done</span>
+        <span class="svc-rate">PKR ${p.rate}/hr</span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-primary btn-sm" style="flex:1;" onclick="showToast('Contacting ${p.name}...','info')">📞 Hire Now</button>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Review submitted!','success')">⭐ Review</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addService() {
+  const name  = document.getElementById('newSvcName').value.trim();
+  const cat   = document.getElementById('newSvcCat').value;
+  const exp   = parseInt(document.getElementById('newSvcExp').value) || 0;
+  const rate  = parseInt(document.getElementById('newSvcRate').value) || 0;
+  const phone = document.getElementById('newSvcPhone').value.trim();
+  if (!name) { showToast('Please enter your name','error'); return; }
+  providers.unshift({ id:Date.now(), name, cat, exp, jobs:0, rating:5.0, rate, phone:phone||'—', available:true, skills:[] });
+  closeModal('addSvcModal');
+  renderSvc();
+  showToast('Your service has been listed!','success');
+}
+
+document.addEventListener('DOMContentLoaded', renderSvc);
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka – Dashboard</title>
+
+  <!-- External CSS file -->
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <div class="nav-brand"><span>🏘️</span>Mera Ilaka</div>
+    <div class="nav-right">
+      <span id="navClock"></span>
+      <div class="nav-bell">🔔<span class="dot"></span></div>
+      <div class="nav-user" id="navUser">👤 Loading...</div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ═══════════ LAYOUT ═══════════ -->
+  <div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-section">Main</div>
+      <a class="active"><span class="icon">🏠</span> Home</a>
+      <a><span class="icon">📢</span> Announcements</a>
+      <a><span class="icon">📅</span> Events</a>
+      <a><span class="icon">💬</span> Discussions</a>
+
+      <div class="sidebar-section">Community</div>
+      <a><span class="icon">🏪</span> Businesses</a>
+      <a href="services.html"><span class="icon">🔧</span> Services</a>
+      <a><span class="icon">🛒</span> Marketplace</a>
+      <a><span class="icon">🔍</span> Lost & Found</a>
+
+      <div class="sidebar-section">Civic</div>
+      <a><span class="icon">🚨</span> Emergency</a>
+      <a><span class="icon">📝</span> Report Issue</a>
+      <a><span class="icon">👤</span> My Profile</a>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Emergency Banner -->
+      <div class="emergency-banner">
+        <span class="em-icon">⚠️</span>
+        <div>
+          <strong>Community Alert:</strong> Water supply maintenance on Sunday 8 AM – 12 PM.
+          Store water in advance.
+        </div>
+        <span class="em-close" title="Dismiss">✕</span>
+      </div>
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div>
+          <h2 id="welcomeName">Welcome back! 👋</h2>
+          <p id="welcomeRole">Loading your neighbourhood...</p>
+          <span class="role-badge" id="roleBadge">🏷️ Role</span>
+        </div>
+        <div class="wicon">🏘️</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-num">1,248</div>
+          <div class="stat-lbl">Residents</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏪</div>
+          <div class="stat-num">84</div>
+          <div class="stat-lbl">Businesses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-num">6</div>
+          <div class="stat-lbl">Events This Week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🛒</div>
+          <div class="stat-num">32</div>
+          <div class="stat-lbl">Marketplace Items</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="page-title">Quick Actions</div>
+      <div class="quick-grid">
+        <div class="quick-btn" data-action="post-update">
+          <div class="q-icon">📢</div>
+          <div class="q-label">Post Update</div>
+        </div>
+        <div class="quick-btn" data-action="sell-item">
+          <div class="q-icon">🛒</div>
+          <div class="q-label">Sell Item</div>
+        </div>
+        <div class="quick-btn" data-action="report-issue">
+          <div class="q-icon">📝</div>
+          <div class="q-label">Report Issue</div>
+        </div>
+        <div class="quick-btn" data-action="emergency">
+          <div class="q-icon">🚨</div>
+          <div class="q-label">Emergency</div>
+        </div>
+      </div>
+
+      <!-- Announcements + Events -->
+      <div class="row-2">
+
+        <!-- Announcements -->
+        <div class="widget">
+          <h3>📢 Latest Announcements</h3>
+
+          <div class="ann-item">
+            <span class="ann-badge">Maintenance</span>
+            <span>Water supply off Sunday 8 AM – 12 PM in Block A, B, C.</span>
+          </div>
+          <div class="ann-item">
+            <span class="ann-badge safety">Safety</span>
+            <span>New security guards deployed at Gate 2 from Monday.</span>
+          </div>
+          <div class="ann-item">
+            <span class="ann-badge event">Event</span>
+            <span>Diwali celebration this Saturday at Community Hall 6 PM.</span>
+          </div>
+          <div class="ann-item">
+            <span class="ann-badge civic">Civic</span>
+            <span>Road repair on Main Street – expect minor traffic delays.</span>
+          </div>
+        </div>
+
+        <!-- Events -->
+        <div class="widget">
+          <h3>📅 Upcoming Events</h3>
+
+          <div class="event-item">
+            <div class="event-date">12<br>JUL</div>
+            <div>
+              <strong>Blood Donation Camp</strong><br>
+              <span style="color:#888">Community Hall · 9 AM – 3 PM</span>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date">15<br>JUL</div>
+            <div>
+              <strong>Resident Meeting</strong><br>
+              <span style="color:#888">Block A Terrace · 7 PM</span>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date">20<br>JUL</div>
+            <div>
+              <strong>Diwali Celebration</strong><br>
+              <span style="color:#888">Main Park · 6 PM Onwards</span>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date">22<br>JUL</div>
+            <div>
+              <strong>Health Awareness Camp</strong><br>
+              <span style="color:#888">Clinic Gate · 10 AM – 1 PM</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end .row-2 -->
+
+    </main><!-- end .main -->
+  </div><!-- end .layout -->
+
+  <script>
+    // ── Load logged-in user from sessionStorage ───────────────────
+    window.onload = function () {
+      const data = sessionStorage.getItem('loggedUser');
+
+      if (!data) {
+        // Not logged in – redirect back to login page
+        window.location.href = "login.html";
+        return;
+      }
+
+      const user = JSON.parse(data);
+
+      // Update navbar
+      document.getElementById('navUser').textContent = "👤 " + user.name + " (" + user.role + ")";
+
+      // Update welcome banner
+      document.getElementById('welcomeName').textContent = "Welcome, " + user.name + "! 👋";
+      document.getElementById('welcomeRole').textContent =
+        "Role: " + user.role + " · Sector 14, Green Valley – Your Digital Neighbourhood";
+
+      // ── Close (dismiss) the community alert banner ──────────────
+      // When user clicks the ✕ button, smoothly hide the banner
+      const closeBtn = document.querySelector('.em-close');
+      const banner   = document.querySelector('.emergency-banner');
+
+      if (closeBtn && banner) {
+        closeBtn.addEventListener('click', function () {
+          // Fade out and shrink the banner smoothly
+          banner.style.transition  = 'opacity 0.3s ease, max-height 0.4s ease, margin 0.3s ease, padding 0.3s ease';
+          banner.style.opacity     = '0';
+          banner.style.maxHeight   = '0';
+          banner.style.padding     = '0';
+          banner.style.marginBottom = '0';
+          banner.style.overflow    = 'hidden';
+          banner.style.border      = 'none';
+        });
+      }
+    };
+
+    // ── Logout ────────────────────────────────────────────────────
+    function logout() {
+      sessionStorage.removeItem('loggedUser');
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>

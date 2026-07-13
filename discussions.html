@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka – Discussions</title>
+
+  <!-- Reuse the main dashboard styles -->
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <!-- Our own discussions styles -->
+  <link rel="stylesheet" href="css/discussions.css" />
+</head>
+<body>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <div class="nav-brand"><span>🏘️</span>Mera Ilaka</div>
+    <div class="nav-right">
+      <span id="navClock"></span>
+      <div class="nav-bell">🔔<span class="dot"></span></div>
+      <div class="nav-user" id="navUser">👤 Loading...</div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ═══════════ LAYOUT ═══════════ -->
+  <div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><span class="icon">🏠</span> Home</a>
+      <a href="announcements.html"><span class="icon">📢</span> Announcements</a>
+      <a href="events.html"><span class="icon">📅</span> Events</a>
+      <a class="active"><span class="icon">💬</span> Discussions</a>
+
+      <div class="sidebar-section">Community</div>
+      <a><span class="icon">🏪</span> Businesses</a>
+      <a href="services.html"><span class="icon">🔧</span> Services</a>
+      <a><span class="icon">🛒</span> Marketplace</a>
+      <a><span class="icon">🔍</span> Lost & Found</a>
+
+      <div class="sidebar-section">Civic</div>
+      <a><span class="icon">🚨</span> Emergency</a>
+      <a><span class="icon">📝</span> Report Issue</a>
+      <a><span class="icon">👤</span> My Profile</a>
+    </aside>
+
+    <!-- ── MAIN CONTENT ── -->
+    <main class="main">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h2>💬 Discussions</h2>
+          <p>Talk, share ideas, and connect with your neighbours.</p>
+        </div>
+        <!-- Anyone can start a new discussion -->
+        <button class="btn-post" onclick="openNewTopicModal()">+ New Discussion</button>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterTopics('all', this)">All</button>
+        <button class="filter-btn" onclick="filterTopics('general', this)">💬 General</button>
+        <button class="filter-btn" onclick="filterTopics('safety', this)">🛡️ Safety</button>
+        <button class="filter-btn" onclick="filterTopics('suggestion', this)">💡 Suggestions</button>
+        <button class="filter-btn" onclick="filterTopics('help', this)">🙋 Help</button>
+      </div>
+
+      <!-- Discussion Topics List -->
+      <div class="topics-list" id="topicsList">
+        <!-- Cards are built by discussions.js -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═══════════ NEW TOPIC MODAL ═══════════ -->
+  <div class="modal-overlay" id="topicModal">
+    <div class="modal">
+      <h3>💬 Start a New Discussion</h3>
+
+      <!-- Topic title -->
+      <input type="text" id="topicTitle" placeholder="What do you want to discuss?" />
+
+      <!-- Category dropdown -->
+      <select id="topicCategory">
+        <option value="general">💬 General</option>
+        <option value="safety">🛡️ Safety</option>
+        <option value="suggestion">💡 Suggestion</option>
+        <option value="help">🙋 Help</option>
+      </select>
+
+      <!-- Message / description -->
+      <textarea id="topicMsg" rows="4" placeholder="Write your message here..."></textarea>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeNewTopicModal()">Cancel</button>
+        <button class="btn-submit" onclick="submitTopic()">Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ REPLY MODAL ═══════════ -->
+  <!-- This opens when user clicks "Reply" on a topic -->
+  <div class="modal-overlay" id="replyModal">
+    <div class="modal">
+      <h3 id="replyModalTitle">💬 Reply to Discussion</h3>
+
+      <textarea id="replyMsg" rows="4" placeholder="Write your reply..."></textarea>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeReplyModal()">Cancel</button>
+        <button class="btn-submit" onclick="submitReply()">Reply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/discussions.js"></script>
+</body>
+</html>

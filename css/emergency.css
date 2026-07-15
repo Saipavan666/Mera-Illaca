@@ -1,0 +1,301 @@
+/* ============================================================
+   emergency.css  –  Mera Ilaka
+   Beginner-friendly: every section has a clear comment
+   ============================================================ */
+
+/* ── Warning banner at the very top ── */
+.warning-banner {
+  background: #fff3e0;           /* soft orange background */
+  border: 1.8px solid #ffa726;
+  border-radius: 10px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #e65100;
+  margin-bottom: 22px;
+  font-weight: 500;
+}
+
+/* ── Page header ── */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #b71c1c;    /* dark red for emergency theme */
+}
+
+.page-header p {
+  font-size: 13px;
+  color: #777;
+  margin-top: 3px;
+}
+
+/* ── Big red SOS button (top right) ── */
+.btn-sos {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  /* Gentle pulsing animation to draw attention */
+  animation: sosPulse 1.8s infinite;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-sos:hover  { background: #b71c1c; animation: none; }
+.btn-sos:active { transform: scale(0.96); }
+
+/* Pulsing red glow animation */
+@keyframes sosPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.5); }
+  50%       { box-shadow: 0 0 0 10px rgba(229, 57, 53, 0);  }
+}
+
+/* ── Section titles (e.g. "Emergency Contacts") ── */
+.em-section-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1b5e20;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #e8f5e9;
+}
+
+/* ── Emergency contacts grid: 3 columns on desktop ── */
+.em-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+/* ── Single emergency contact card ── */
+.em-card {
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+.em-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.em-card:active { transform: scale(0.97); }
+
+/* Emoji icon on card */
+.em-card .em-emoji {
+  font-size: 40px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Service name */
+.em-card .em-name {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+/* Phone number */
+.em-card .em-number {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+/* "Tap to Call" text at bottom */
+.em-card .em-tap {
+  font-size: 11.5px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+/* ── Colour themes for different card types ── */
+.em-card.red    { background: #ffebee; color: #c62828; }
+.em-card.blue   { background: #e3f2fd; color: #1565c0; }
+.em-card.orange { background: #fff3e0; color: #e65100; }
+.em-card.green  { background: #e8f5e9; color: #2e7d32; }
+.em-card.purple { background: #f3e5f5; color: #6a1b9a; }
+.em-card.teal   { background: #e0f2f1; color: #00695c; }
+
+/* ── Colony wardens list ── */
+.wardens-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Single warden row */
+.warden-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: transform 0.15s;
+}
+
+.warden-card:hover { transform: translateX(4px); }
+
+/* Avatar circle with initials */
+.warden-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Warden info text */
+.warden-info { flex: 1; }
+
+.warden-info strong {
+  font-size: 14px;
+  color: #222;
+  display: block;
+}
+
+.warden-info span {
+  font-size: 12.5px;
+  color: #888;
+}
+
+/* Call button on warden card */
+.btn-warden-call {
+  padding: 7px 16px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1.8px solid #2e7d32;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-warden-call:hover {
+  background: #2e7d32;
+  color: #fff;
+}
+
+/* ── Recent alerts list ── */
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Single alert row */
+.alert-row {
+  background: #fff;
+  border-radius: 11px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-left: 4px solid #e53935;  /* red left accent */
+}
+
+.alert-row .alert-icon { font-size: 24px; margin-top: 2px; }
+
+.alert-row .alert-body { flex: 1; }
+
+.alert-row .alert-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 3px;
+}
+
+.alert-row .alert-meta {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Badge showing alert type */
+.alert-type-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #ffebee;
+  color: #c62828;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+/* ── SOS modal submit button (red) ── */
+.btn-sos-submit {
+  padding: 10px 20px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-sos-submit:hover { background: #b71c1c; }
+
+/* ── Modal inputs ── */
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1.6px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 11px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus { border-color: #e53935; }  /* red focus for emergency */
+
+.modal textarea { resize: vertical; }
+
+/* ── Responsive: 2 cols on tablet ── */
+@media (max-width: 900px) {
+  .em-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Responsive: 1 col on mobile ── */
+@media (max-width: 600px) {
+  .em-grid    { grid-template-columns: repeat(2, 1fr); }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .warden-card { flex-wrap: wrap; }
+}

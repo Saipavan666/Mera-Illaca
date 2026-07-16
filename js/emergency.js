@@ -65,6 +65,23 @@ window.onload = function () {
   renderAlerts();
 };
 
+/* ── STEP 4b: Dismiss the warning banner ─────────────────────
+   Smoothly hides the orange warning banner at the top
+   when the user clicks the ✕ button.
+──────────────────────────────────────────────────────────── */
+function dismissBanner() {
+  var banner = document.getElementById("warningBanner");
+  if (!banner) return;
+
+  /* Animate it: fade out + collapse height smoothly */
+  banner.style.transition  = "opacity 0.3s ease, max-height 0.4s ease, margin 0.3s ease, padding 0.3s ease";
+  banner.style.opacity     = "0";
+  banner.style.maxHeight   = "0";
+  banner.style.padding     = "0";
+  banner.style.marginBottom = "0";
+  banner.style.overflow    = "hidden";
+  banner.style.border      = "none";
+}
 /* ── STEP 5: Redirect if not logged in ───────────────────── */
 function checkLogin() {
   if (!sessionStorage.getItem("loggedUser")) {

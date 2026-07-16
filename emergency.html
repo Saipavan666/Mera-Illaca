@@ -48,9 +48,11 @@
     <main class="main">
 
       <!-- ── WARNING BANNER at top ── -->
-      <div class="warning-banner">
+      <div class="warning-banner" id="warningBanner">
         <span>🚨</span>
         <span>This page is for <strong>real emergencies only</strong>. Please do not misuse emergency numbers.</span>
+        <!-- ✕ Close button on the right side -->
+        <button class="banner-close" onclick="dismissBanner()" title="Dismiss">✕</button>
       </div>
 
       <!-- ── Page Header ── -->

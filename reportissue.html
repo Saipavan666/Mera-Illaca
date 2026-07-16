@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mera Ilaka – Report Issue</title>
+
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/reportissue.css" />
+</head>
+<body>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <div class="nav-brand"><span>🏘️</span>Mera Ilaka</div>
+    <div class="nav-right">
+      <span id="navClock"></span>
+      <div class="nav-bell">🔔<span class="dot"></span></div>
+      <div class="nav-user" id="navUser">👤 Loading...</div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ═══════════ LAYOUT ═══════════ -->
+  <div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-section">Main</div>
+      <a href="dashboard.html"><span class="icon">🏠</span> Home</a>
+      <a href="announcements.html"><span class="icon">📢</span> Announcements</a>
+      <a href="events.html"><span class="icon">📅</span> Events</a>
+      <a href="discussions.html"><span class="icon">💬</span> Discussions</a>
+
+      <div class="sidebar-section">Community</div>
+      <a href="businesses.html"><span class="icon">🏪</span> Businesses</a>
+      <a href="services.html"><span class="icon">🔧</span> Services</a>
+      <a href="marketplace.html"><span class="icon">🛒</span> Marketplace</a>
+      <a href="lostfound.html"><span class="icon">🔍</span> Lost & Found</a>
+
+      <div class="sidebar-section">Civic</div>
+      <a href="emergency.html"><span class="icon">🚨</span> Emergency</a>
+      <a class="active"><span class="icon">📝</span> Report Issue</a>
+      <a><span class="icon">👤</span> My Profile</a>
+    </aside>
+
+    <!-- ── MAIN CONTENT ── -->
+    <main class="main">
+
+      <!-- ── Page Header ── -->
+      <div class="page-header">
+        <div>
+          <h2>📝 Report an Issue</h2>
+          <p>Raise civic problems in your neighbourhood so they get fixed quickly.</p>
+        </div>
+        <button class="btn-post" onclick="openReportModal()">+ Report New Issue</button>
+      </div>
+
+      <!-- ── Quick Stats Bar ── -->
+      <div class="stats-bar" id="statsBar">
+        <!-- Built by reportissue.js -->
+      </div>
+
+      <!-- ── Filter Buttons ── -->
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterIssues('all', this)">All</button>
+        <button class="filter-btn" onclick="filterIssues('open', this)">🔴 Open</button>
+        <button class="filter-btn" onclick="filterIssues('inprogress', this)">🟡 In Progress</button>
+        <button class="filter-btn" onclick="filterIssues('resolved', this)">🟢 Resolved</button>
+      </div>
+
+      <!-- ── Category Filter ── -->
+      <div class="filter-bar" style="margin-top:-10px;">
+        <button class="cat-btn active" onclick="filterCategory('all', this)">All Categories</button>
+        <button class="cat-btn" onclick="filterCategory('road', this)">🛣️ Road</button>
+        <button class="cat-btn" onclick="filterCategory('water', this)">💧 Water</button>
+        <button class="cat-btn" onclick="filterCategory('electricity', this)">⚡ Electricity</button>
+        <button class="cat-btn" onclick="filterCategory('cleanliness', this)">🧹 Cleanliness</button>
+        <button class="cat-btn" onclick="filterCategory('security', this)">🔒 Security</button>
+        <button class="cat-btn" onclick="filterCategory('other', this)">📦 Other</button>
+      </div>
+
+      <!-- ── Issues List ── -->
+      <div class="issues-list" id="issuesList">
+        <!-- Cards built by reportissue.js -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═══════════ REPORT ISSUE MODAL ═══════════ -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="modal">
+      <h3>📝 Report a New Issue</h3>
+
+      <!-- Issue title -->
+      <input type="text" id="issueTitle"    placeholder="Brief title  e.g. Pothole on Main Road" />
+
+      <!-- Location -->
+      <input type="text" id="issueLocation" placeholder="Location  e.g. Block A, Near Gate 2" />
+
+      <!-- Category -->
+      <select id="issueCategory">
+        <option value="road">🛣️ Road / Pothole</option>
+        <option value="water">💧 Water Supply</option>
+        <option value="electricity">⚡ Electricity</option>
+        <option value="cleanliness">🧹 Cleanliness / Garbage</option>
+        <option value="security">🔒 Security</option>
+        <option value="other">📦 Other</option>
+      </select>
+
+      <!-- Priority level -->
+      <select id="issuePriority">
+        <option value="high">🔴 High Priority</option>
+        <option value="medium">🟡 Medium Priority</option>
+        <option value="low">🟢 Low Priority</option>
+      </select>
+
+      <!-- Full description -->
+      <textarea id="issueDesc" rows="3" placeholder="Describe the issue in detail..."></textarea>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeReportModal()">Cancel</button>
+        <button class="btn-submit" onclick="submitIssue()">Submit Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ═══════════ REPLY MODAL ═══════════ -->
+  <div class="modal-overlay" id="replyModal">
+    <div class="modal">
+      <!-- Title changes to show which issue is being replied to -->
+      <h3 id="replyModalTitle">💬 Reply to Issue</h3>
+
+      <!-- Reply text area -->
+      <textarea id="replyInput" rows="4" placeholder="Write your reply or suggestion here..."></textarea>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeReplyModal()">Cancel</button>
+        <button class="btn-submit" onclick="submitReply()">Post Reply</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/reportissue.js"></script>
+</body>
+</html>

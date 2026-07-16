@@ -1,0 +1,399 @@
+/* ============================================================
+   reportissue.css  –  Mera Ilaka
+   Beginner-friendly: every section has a clear comment
+   ============================================================ */
+
+/* ── Page header: title left, button right ── */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.page-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1b5e20;
+}
+
+.page-header p {
+  font-size: 13px;
+  color: #777;
+  margin-top: 3px;
+}
+
+/* ── "Report New Issue" green button ── */
+.btn-post {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-post:hover  { background: #1b5e20; }
+.btn-post:active { transform: scale(0.97); }
+
+/* ── Stats bar: 3 coloured stat pills ── */
+.stats-bar {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+/* Each stat pill */
+.stat-pill {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 22px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-pill .snum { font-size: 22px; font-weight: 900; }
+
+/* Colour of the number per status */
+.stat-pill.open       .snum { color: #c62828; }
+.stat-pill.inprogress .snum { color: #f57f17; }
+.stat-pill.resolved   .snum { color: #2e7d32; }
+
+/* ── Filter buttons (status row) ── */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.filter-btn {
+  padding: 7px 16px;
+  border: 1.8px solid #ddd;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  background: #2e7d32;
+  color: #fff;
+  border-color: #2e7d32;
+}
+
+/* ── Category filter buttons (smaller, grey style) ── */
+.cat-btn {
+  padding: 6px 14px;
+  border: 1.6px solid #e0e0e0;
+  border-radius: 20px;
+  background: #f9f9f9;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cat-btn.active,
+.cat-btn:hover {
+  background: #1b5e20;
+  color: #fff;
+  border-color: #1b5e20;
+}
+
+/* ── Issues list: stacked cards ── */
+.issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* ── Single issue card ── */
+.issue-card {
+  background: #fff;
+  border-radius: 13px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border-left: 5px solid #ccc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.issue-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* Left border colour = status colour */
+.issue-card.open       { border-left-color: #e53935; }
+.issue-card.inprogress { border-left-color: #ffa000; }
+.issue-card.resolved   { border-left-color: #43a047; }
+
+/* ── Card top row: badges + date ── */
+.issue-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+/* Status badge */
+.status-badge {
+  font-size: 11px;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.status-badge.open       { background: #ffebee; color: #c62828; }
+.status-badge.inprogress { background: #fff8e1; color: #f57f17; }
+.status-badge.resolved   { background: #e8f5e9; color: #2e7d32; }
+
+/* Priority badge */
+.priority-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.priority-badge.high   { background: #ffebee; color: #c62828; }
+.priority-badge.medium { background: #fff8e1; color: #e65100; }
+.priority-badge.low    { background: #e8f5e9; color: #2e7d32; }
+
+/* Category badge */
+.cat-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+/* Date pushed to the right */
+.issue-date {
+  font-size: 11.5px;
+  color: #bbb;
+  margin-left: auto;
+}
+
+/* ── Issue title ── */
+.issue-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+/* ── Location text ── */
+.issue-location {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+/* ── Description text ── */
+.issue-desc {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+/* ── Footer row: reporter + upvote + status buttons ── */
+.issue-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px solid #f5f5f5;
+}
+
+.issue-by {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Upvote button */
+.btn-upvote {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1.6px solid #ddd;
+  background: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.btn-upvote:hover       { background: #e8f5e9; color: #2e7d32; border-color: #2e7d32; }
+.btn-upvote.upvoted     { background: #e8f5e9; color: #2e7d32; border-color: #2e7d32; }
+
+/* "Mark as In Progress" and "Mark as Resolved" buttons */
+.btn-status {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1.6px solid;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-status.progress {
+  background: #fff8e1;
+  color: #f57f17;
+  border-color: #ffa000;
+}
+
+.btn-status.progress:hover { background: #ffa000; color: #fff; }
+
+.btn-status.done {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-color: #43a047;
+}
+
+.btn-status.done:hover { background: #43a047; color: #fff; }
+
+/* ── Modal inputs ── */
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1.6px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 11px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus { border-color: #2e7d32; }
+
+.modal textarea { resize: vertical; }
+
+/* ── Empty state ── */
+.no-result {
+  text-align: center;
+  padding: 50px 20px;
+  color: #aaa;
+  font-size: 15px;
+}
+
+/* ── Responsive: mobile ── */
+@media (max-width: 600px) {
+  .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .issue-date  { margin-left: 0; }
+}
+
+/* ── Reply & View Replies action buttons (same pill style as Discussions) ── */
+.btn-action {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1.6px solid #ddd;
+  background: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-action:hover {
+  border-color: #2e7d32;
+  color: #2e7d32;
+  background: #f1f8e9;
+}
+
+/* Reply count text pushed to the right */
+.reply-count {
+  font-size: 12px;
+  color: #bbb;
+  margin-left: auto;
+}
+
+/* ── Replies section — hidden by default ── */
+.replies-section {
+  display: none;            /* JS changes this to "block" on click */
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed #e0e0e0;
+}
+
+/* ── Single reply row ── */
+.reply-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+
+/* Small circular avatar with initials */
+.reply-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Reply bubble background */
+.reply-body {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex: 1;
+}
+
+.reply-body strong {
+  font-size: 12.5px;
+  color: #333;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.reply-body p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* "No replies yet" placeholder message */
+.no-replies-yet {
+  font-size: 13px;
+  color: #bbb;
+  padding: 6px 0;
+  margin: 0;
+}

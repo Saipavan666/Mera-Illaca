@@ -18,6 +18,25 @@
   font-weight: 500;
 }
 
+/* ── ✕ Cancel / Dismiss button inside the banner ── */
+.banner-close {
+  margin-left: auto;       /* pushes the button to the far right */
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #e65100;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.banner-close:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
 /* ── Page header ── */
 .page-header {
   display: flex;

@@ -1,0 +1,303 @@
+/* ============================================================
+   profile.css  –  Mera Ilaka
+   Beginner-friendly: every section has a clear comment
+   ============================================================ */
+
+/* ── Profile Hero Card (big banner at the top) ── */
+.profile-hero {
+  background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+  border-radius: 16px;
+  padding: 28px 30px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 26px;
+  box-shadow: 0 4px 18px rgba(46,125,50,0.3);
+  flex-wrap: wrap;
+}
+
+/* ── Big circular avatar with initials ── */
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  border: 3px solid rgba(255,255,255,0.6);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+}
+
+/* ── Name, role, email inside hero ── */
+.profile-hero-info {
+  flex: 1;
+}
+
+.profile-hero-info h2 {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+/* Role badge pill */
+.profile-role-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.22);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+  border-radius: 20px;
+  padding: 3px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.profile-email {
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.profile-since {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+}
+
+/* ── Edit Profile button in hero ── */
+.btn-edit {
+  background: #fff;
+  color: #2e7d32;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-left: auto;
+}
+
+.btn-edit:hover  { background: #e8f5e9; }
+.btn-edit:active { transform: scale(0.97); }
+
+/* ── Two-column grid below the hero ── */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Each column stacks its cards top to bottom */
+.profile-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── White card box used for each section ── */
+.profile-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+/* ── Card section title ── */
+.card-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1b5e20;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e8f5e9;
+}
+
+/* ── Personal details rows (label : value) ── */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 13.5px;
+}
+
+.detail-row:last-child { border-bottom: none; }
+
+.detail-label {
+  color: #999;
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.detail-value {
+  color: #222;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ── Activity stats: 2×2 mini grid ── */
+.activity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Each activity box */
+.activity-item {
+  background: #f1f8e9;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  transition: transform 0.15s;
+}
+
+.activity-item:hover { transform: translateY(-2px); }
+
+.act-num {
+  font-size: 26px;
+  font-weight: 900;
+  color: #2e7d32;
+}
+
+.act-lbl {
+  font-size: 11.5px;
+  color: #777;
+  margin-top: 4px;
+}
+
+/* ── Change Password form groups ── */
+.form-group {
+  margin-bottom: 13px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1.6px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus { border-color: #2e7d32; }
+
+/* ── Save / Update button ── */
+.btn-save {
+  width: 100%;
+  padding: 11px 0;
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-save:hover  { background: #1b5e20; }
+.btn-save:active { transform: scale(0.98); }
+
+/* ── Notification toggle rows ── */
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.toggle-row:last-of-type { border-bottom: none; }
+
+.toggle-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #333;
+}
+
+.toggle-sub {
+  font-size: 11.5px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+/* ── Toggle switch (on/off) ──
+   This is a CSS-only custom toggle switch.
+   The real <input type="checkbox"> is hidden.
+   The .slider is the visual on/off pill. ── */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Hide the actual checkbox */
+.switch input { opacity: 0; width: 0; height: 0; }
+
+/* The grey/green pill */
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+/* The white circle inside the pill */
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.25s;
+}
+
+/* When checkbox is checked → green pill, circle moves right */
+.switch input:checked + .slider             { background: #2e7d32; }
+.switch input:checked + .slider::before     { transform: translateX(20px); }
+
+/* ── Modal inputs ── */
+.modal input {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1.6px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 12px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.modal input:focus { border-color: #2e7d32; }
+
+/* ── Responsive: stack to 1 column on mobile ── */
+@media (max-width: 750px) {
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-hero { flex-direction: column; align-items: flex-start; }
+  .btn-edit     { margin-left: 0; }
+}
